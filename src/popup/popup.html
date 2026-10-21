@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>WhatsApp When Ready</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="title">WhatsApp When Ready</h1>
+      <label class="switch" title="Turn the extension on or off">
+        <input id="enabled" type="checkbox" role="switch" aria-label="Enabled" />
+        <span class="switch__track" aria-hidden="true"></span>
+      </label>
+    </header>
+
+    <section class="status" aria-live="polite">
+      <p id="status-text" class="status__text">Loading…</p>
+      <button id="action" class="button" type="button" hidden></button>
+    </section>
+
+    <section class="settings">
+      <label class="row">
+        <span>Hide unread counts</span>
+        <input id="hide-unread" type="checkbox" />
+      </label>
+      <label class="row">
+        <span>Show chats for</span>
+        <span class="minutes">
+          <input id="reveal-minutes" type="number" min="1" max="120" step="1" />
+          min
+        </span>
+      </label>
+    </section>
+
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

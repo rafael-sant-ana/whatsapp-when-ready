@@ -6,6 +6,7 @@ const WHATSAPP_URL = 'https://web.whatsapp.com/';
 
 const enabledInput = document.querySelector<HTMLInputElement>('#enabled')!;
 const hideUnreadInput = document.querySelector<HTMLInputElement>('#hide-unread')!;
+const muteSoundsInput = document.querySelector<HTMLInputElement>('#mute-sounds')!;
 const minutesInput = document.querySelector<HTMLInputElement>('#reveal-minutes')!;
 const statusText = document.querySelector<HTMLParagraphElement>('#status-text')!;
 const actionButton = document.querySelector<HTMLButtonElement>('#action')!;
@@ -60,6 +61,7 @@ function render(): void {
   document.body.classList.toggle('disabled', !settings.enabled);
   enabledInput.checked = settings.enabled;
   hideUnreadInput.checked = settings.hideUnread;
+  muteSoundsInput.checked = settings.muteSounds;
   if (document.activeElement !== minutesInput) minutesInput.value = String(settings.revealMinutes);
 
   switch (view.kind) {
@@ -110,6 +112,11 @@ enabledInput.addEventListener('change', async () => {
 hideUnreadInput.addEventListener('change', async () => {
   settings = { ...settings, hideUnread: hideUnreadInput.checked };
   await saveSettings({ hideUnread: settings.hideUnread });
+});
+
+muteSoundsInput.addEventListener('change', async () => {
+  settings = { ...settings, muteSounds: muteSoundsInput.checked };
+  await saveSettings({ muteSounds: settings.muteSounds });
 });
 
 minutesInput.addEventListener('change', async () => {

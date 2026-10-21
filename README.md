@@ -8,7 +8,8 @@ A Chrome extension that hides your WhatsApp Web chat list until you're ready for
 - **Hides unread signals.** Unread badges, bold chat names, the `(N)` count in the tab title and the badged favicon are removed, even while the list is showing.
 - **Keeps search working.** Type in the search box to find someone and message them without seeing the rest of your inbox. A conversation you open this way stays visible.
 - **Hides the open conversation** while the list is hidden, so a chat left open doesn't become a back door into your inbox.
-- **Toolbar popup** to turn it on or off, show or hide chats (with a countdown), turn unread hiding on or off, and set the timer length.
+- **Mutes message sounds.** The ping for incoming messages is silenced and desktop notifications are made silent. Audio you start yourself, like voice notes, still plays.
+- **Toolbar popup** to turn it on or off, show or hide chats (with a countdown), turn unread hiding and sound muting on or off, and set the timer length.
 
 New messages never surface while the list is hidden. There are no notifications or counts.
 
@@ -45,11 +46,16 @@ src/content/              Runs on web.whatsapp.com
   styles.ts               Injected CSS, driven by the state classes
   revealTimer.ts          In-memory "show chats for N minutes" timer
   placeholder.ts          The "Chats are hidden" panel
+src/page/                 Runs in WhatsApp's own JS world ("world": "MAIN") to mute sounds
 src/popup/                Toolbar popup
 src/shared/               Settings (chrome.storage.sync) and message types
 ```
 
-The content script is built as a single IIFE (`vite.content.config.ts`) because Chrome loads content scripts as classic scripts.
+Chrome loads content scripts as classic scripts, so `content.js` and `page.js` are each built as a single IIFE (`vite.content.config.ts`, with `--mode page` for the latter).
+
+### How muting works
+
+WhatsApp plays its alert sound from its own JavaScript, which an isolated content script can't touch. So `src/page/` runs in the page's world and wraps `HTMLMediaElement.prototype.play`. Audio that starts without a recent click or keypress (`navigator.userActivation.isActive`) is played muted. Voice notes are started by a click, so they play normally. `Notification` and `showNotification` get `silent: true`. The content script switches this on and off through a `data-wwr-mute` attribute on `<html>`.
 
 ## When WhatsApp changes its page
 
@@ -59,4 +65,4 @@ Unread badges are matched by their localized `aria-label`. English, Portuguese, 
 
 ## Privacy
 
-Everything runs locally in your browser. The extension reads no messages, makes no network requests, and only stores its own three settings in `chrome.storage.sync`.
+Everything runs locally in your browser. The extension reads no messages, makes no network requests, and only stores its own four settings in `chrome.storage.sync`.

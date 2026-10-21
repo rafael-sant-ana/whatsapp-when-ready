@@ -7,12 +7,15 @@ export type Settings = {
   hideUnread: boolean;
   /** How long the chat list stays visible after "Show chats". */
   revealMinutes: number;
+  /** Silence incoming-message sounds and make desktop notifications silent. */
+  muteSounds: boolean;
 };
 
 export const DEFAULT_SETTINGS: Settings = {
   enabled: true,
   hideUnread: true,
   revealMinutes: 5,
+  muteSounds: true,
 };
 
 export const MIN_REVEAL_MINUTES = 1;
@@ -32,6 +35,7 @@ export function normalizeSettings(raw: Partial<Record<keyof Settings, unknown>>)
       typeof raw.revealMinutes === 'number'
         ? clampRevealMinutes(raw.revealMinutes)
         : DEFAULT_SETTINGS.revealMinutes,
+    muteSounds: typeof raw.muteSounds === 'boolean' ? raw.muteSounds : DEFAULT_SETTINGS.muteSounds,
   };
 }
 

@@ -5,7 +5,7 @@
   "description": "Hide your WhatsApp Web chat list until you're ready for it.",
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && vite build && vite build --config vite.content.config.ts",
+    "build": "tsc --noEmit && vite build && vite build --config vite.content.config.ts && vite build --config vite.content.config.ts --mode page",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

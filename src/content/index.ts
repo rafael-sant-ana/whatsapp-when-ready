@@ -1,4 +1,5 @@
 import type { Request, TabState } from '../shared/messages';
+import { MUTE_ATTRIBUTE } from '../shared/pageFlags';
 import { DEFAULT_SETTINGS, loadSettings, onSettingsChanged, type Settings } from '../shared/settings';
 import { createPlaceholder } from './placeholder';
 import { RevealTimer } from './revealTimer';
@@ -48,6 +49,10 @@ function hideUnread(): boolean {
   return settings.enabled && settings.hideUnread;
 }
 
+function muteSounds(): boolean {
+  return settings.enabled && settings.muteSounds;
+}
+
 /** Keeps the placeholder sitting right after the (hidden) chat list. */
 function placePlaceholder(): void {
   const list = document.querySelector(CHAT_LIST);
@@ -84,6 +89,8 @@ function sync(): void {
   root.classList.toggle(CLASS_SEARCHING, hidden && isSearching());
   root.classList.toggle(CLASS_CONVERSATION_ALLOWED, hidden && conversationAllowed);
   root.classList.toggle(CLASS_HIDE_UNREAD, hideUnread());
+  // Read by the page-world script (src/page) each time WhatsApp plays a sound.
+  root.toggleAttribute(MUTE_ATTRIBUTE, muteSounds());
   placePlaceholder();
   fixTitle();
   fixFavicon();
